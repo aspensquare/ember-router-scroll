@@ -15,8 +15,8 @@ export default Service.extend({
     set(this, 'key', null);
   },
 
-  update() {
-    const scrollElement = get(this, 'scrollElement');
+  update(scrollElement) {
+    scrollElement = scrollElement || get(this, 'scrollElement');
     const scrollMap = get(this, 'scrollMap');
     const key = get(this, 'key');
     let x;
@@ -35,7 +35,7 @@ export default Service.extend({
     }
 
     if (key && 'number' === typeOf(x) && 'number' === typeOf(y)) {
-      set(scrollMap, key, { x, y });
+      set(scrollMap, key, { scrollElement, x, y });
     }
   },
 

@@ -12,9 +12,11 @@ export default Mixin.create({
     return fastboot ? fastboot.get('isFastBoot') : false;
   }),
 
-  willTransition(...args) {
-    this._super(...args);
-    get(this, 'service').update();
+  willTransition(transitions, ...args) {
+    this._super(transitions, ...args);
+    let scrollElement = transitions[transitions.length - 1]
+      .handler.controller.get('scrollElement');
+    get(this, 'service').update(scrollElement && decodeURIComponent(scrollElement));
   },
 
   didTransition(transitions, ...args) {
@@ -28,11 +30,12 @@ export default Mixin.create({
   },
 
   updateScrollPosition(transitions) {
-    const scrollElement = get(this, 'service.scrollElement');
     let scrollPosition = get(this, 'service.position');
+    let controller = transitions[transitions.length - 1]
+      .handler.controller;
 
-    let preserveScrollPosition = transitions[transitions.length - 1]
-      .handler.controller.get('preserveScrollPosition');
+    let preserveScrollPosition = controller.get('preserveScrollPosition');
+    let scrollElement = controller.get('preserveScrollPosition') || get(this, 'service.scrollElement');
 
     if (!preserveScrollPosition) {
       if ('window' === scrollElement) {
